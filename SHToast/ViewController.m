@@ -20,11 +20,12 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [SHToast showTopWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" duration:2];
-//    [SHToast showWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" duration:2];
+- (IBAction)toast:(id)sender {
+    [SHToast showWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" duration:2];
 }
-
+- (IBAction)push:(id)sender {
+    [SHToast showTopWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" duration:2];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
