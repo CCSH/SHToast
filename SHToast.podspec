@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
     s.license      = 'MIT'
     s.authors      = {'CSH' => '624089195@qq.com'}
     s.platform     = :ios, '6.0'
-    s.source       = {:git => 'hhttps://github.com/CCSH/SHToast.git', :tag => s.version}
+    s.source       = {:git => 'https://github.com/CCSH/SHToast.git', :tag => s.version}
     s.source_files = 'SHToast/**/*.{h,m}'
     s.requires_arc = true
 
