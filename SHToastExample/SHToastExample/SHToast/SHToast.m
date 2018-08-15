@@ -201,11 +201,12 @@
 - (void)showTopAnimation{
     
     __block CGRect frame = _contentView.frame;
+    frame.origin.y = -_contentView.frame.size.height;
+    _contentView.frame = frame;
     
     [UIView animateWithDuration:0.3 animations:^{
-   
         frame.origin.y = 0;
-        _contentView.frame = frame;
+        self->_contentView.frame = frame;
     }];
 }
 
@@ -217,7 +218,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         
         frame.origin.y = -frame.size.height;
-        _contentView.frame = frame;
+        self->_contentView.frame = frame;
     }completion:^(BOOL finished) {
         [self dismissToast];
     }];

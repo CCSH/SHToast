@@ -1,9 +1,9 @@
 //
 //  main.m
-//  SHToast
+//  SHToastExample
 //
-//  Created by CSH on 2017/8/16.
-//  Copyright © 2017年 CSH. All rights reserved.
+//  Created by CSH on 2018/8/15.
+//  Copyright © 2018年 CSH. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
