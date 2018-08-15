@@ -133,6 +133,9 @@
 
 + (void)showWithText:(id)text duration:(CGFloat)duration{
     
+    if (!text) {
+        return;
+    }
     SHToast *toast = [[SHToast alloc] initWithText:text];
     toast.duration = duration;
     
@@ -146,7 +149,9 @@
 }
 
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration{
-    
+    if (!text) {
+        return;
+    }
     SHToast *toast = [[SHToast alloc] initWithText:text];
     toast.duration = duration;
     [toast showWithOffset:offset];
@@ -236,9 +241,10 @@
     [SHToast showTopWithText:text duration:kSHToastTime];
 }
 
-+ (void)showTopWithText:(id)text
-               duration:(CGFloat)duration{
-    
++ (void)showTopWithText:(id)text duration:(CGFloat)duration{
+    if (!text) {
+        return;
+    }
     SHToast *toast = [[SHToast alloc]initTopWithText:text];
     [toast setDuration:duration];
     [toast showTop];

@@ -61,7 +61,7 @@
 		5C247C401F4416350018FA8B /* SHToast */ = {
 			isa = PBXGroup;
 			children = (
-				5C247C581F4416C70018FA8B /* SHToast(提示框) */,
+				5C247C581F4416C70018FA8B /* SHToast */,
 				5C247C441F4416350018FA8B /* AppDelegate.h */,
 				5C247C451F4416350018FA8B /* AppDelegate.m */,
 				5C247C471F4416350018FA8B /* ViewController.h */,
@@ -83,13 +83,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		5C247C581F4416C70018FA8B /* SHToast(提示框) */ = {
+		5C247C581F4416C70018FA8B /* SHToast */ = {
 			isa = PBXGroup;
 			children = (
 				5C247C591F4416E80018FA8B /* SHToast.h */,
 				5C247C5A1F4416E80018FA8B /* SHToast.m */,
 			);
-			path = "SHToast(提示框)";
+			path = SHToast;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -325,6 +325,7 @@
 				5C247C571F4416350018FA8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
