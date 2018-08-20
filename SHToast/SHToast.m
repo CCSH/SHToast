@@ -30,6 +30,23 @@
     [_contentView removeFromSuperview];
 }
 
+#pragma mark - 获取内容Size
+- (CGSize)getTextSizeWithText:(id)text maxSize:(CGSize)maxSize{
+    
+    //内容
+    if ([text isKindOfClass:[NSString class]]) {//字符串
+        
+        NSString *str = (NSString *)text;
+        return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:kSHToastTextFont} context:nil].size;
+    }else if ([text isKindOfClass:[NSAttributedString class]]){//富文本
+        
+        NSAttributedString *att = (NSAttributedString *)text;
+        return [att boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+    }else{//其他
+        return CGSizeZero;
+    }
+}
+
 #pragma mark - 吐丝
 #pragma mark 实例化
 - (id)initWithText:(id)text{
@@ -43,9 +60,9 @@
         _contentView.titleLabel.font = kSHToastTextFont;
         _contentView.titleLabel.numberOfLines = 0;
         _contentView.alpha = 0.0f;
-        
+        [_contentView setTitleEdgeInsets:UIEdgeInsetsMake(kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [_contentView addTarget:self action:@selector(toastClick:) forControlEvents:UIControlEventTouchDown];
+        [_contentView addTarget:self action:@selector(hideAnimation) forControlEvents:UIControlEventTouchDown];
         
         _contentView.layer.cornerRadius = 5.0f;
         _contentView.layer.borderWidth = 1.0f;
@@ -72,46 +89,24 @@
     return self;
 }
 
-#pragma mark 获取内容Size
-- (CGSize)getTextSizeWithText:(id)text maxSize:(CGSize)maxSize{
-
-    //内容
-    if ([text isKindOfClass:[NSString class]]) {//字符串
-        
-        NSString *str = (NSString *)text;
-        return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:kSHToastTextFont} context:nil].size;
-    }else if ([text isKindOfClass:[NSAttributedString class]]){//富文本
-        
-        NSAttributedString *att = (NSAttributedString *)text;
-        return [att boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
-    }else{//其他
-        return CGSizeZero;
-    }
-}
-
-#pragma mark 点击提示框
-- (void)toastClick:(UIButton *)sender{
-    [self hideAnimation];
-}
-
 #pragma mark 显示动画
 - (void)showAnimation{
-    [UIView beginAnimations:@"show" context:NULL];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-    [UIView setAnimationDuration:0.3];
-    _contentView.alpha = 1.0f;
-    [UIView commitAnimations];
+    
+    self->_contentView.alpha = 0;
+    [UIView animateWithDuration:0.3 animations:^{
+        self->_contentView.alpha = 1;
+    }];
 }
 
 #pragma mark 隐藏动画
 - (void)hideAnimation{
-    [UIView beginAnimations:@"hide" context:NULL];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(dismissToast)];
-    [UIView setAnimationDuration:0.3];
-    _contentView.alpha = 0.0f;
-    [UIView commitAnimations];
+    
+    self->_contentView.alpha = 1;
+    [UIView animateWithDuration:0.3 animations:^{
+        self->_contentView.alpha = 0;
+    }completion:^(BOOL finished) {
+        [self dismissToast];
+    }];
 }
 
 #pragma mark 自定义位置显示
@@ -121,10 +116,10 @@
     _contentView.center = CGPointMake(window.center.x, offset);
     [window  addSubview:_contentView];
     [self showAnimation];
-    [self performSelector:@selector(hideAnimation) withObject:nil afterDelay:_duration];
+    [self performSelector:@selector(hideAnimation) withObject:nil afterDelay:self.duration];
 }
 
-#pragma mark - 显示方法
+#pragma mark 显示方法
 #pragma mark 中间位置显示
 + (void)showWithText:(id)text{
     
@@ -136,7 +131,7 @@
     if (!text) {
         return;
     }
-    SHToast *toast = [[SHToast alloc] initWithText:text];
+    SHToast *toast = [[self alloc] initWithText:text];
     toast.duration = duration;
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -169,9 +164,9 @@
         [_contentView setTitleColor:kSHToastTopTextRGB forState:0];
         _contentView.titleLabel.font = kSHToastTopTextFont;
         _contentView.titleLabel.numberOfLines = 0;
-        
+         [_contentView setTitleEdgeInsets:UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [_contentView addTarget:self action:@selector(toastTopClick) forControlEvents:UIControlEventTouchDown];
+        [_contentView addTarget:self action:@selector(hideTopAnimation) forControlEvents:UIControlEventTouchDown];
         
         CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*kSHToastTextMargin, CGFLOAT_MAX);
         CGSize textSize = [self getTextSizeWithText:text maxSize:maxSize];
@@ -188,8 +183,6 @@
             NSAttributedString *att = (NSAttributedString *)text;
             [_contentView setAttributedTitle:att forState:0];
         }
-        
-        [_contentView setContentEdgeInsets:UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
 
         //添加旋转通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
@@ -206,7 +199,7 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         frame.origin.y = 0;
-        _contentView.frame = frame;
+        self->_contentView.frame = frame;
     }];
 }
 
@@ -218,15 +211,10 @@
     [UIView animateWithDuration:0.3 animations:^{
         
         frame.origin.y = -frame.size.height;
-        _contentView.frame = frame;
+        self->_contentView.frame = frame;
     }completion:^(BOOL finished) {
         [self dismissToast];
     }];
-}
-
-#pragma mark 点击提示框
-- (void)toastTopClick{
-    [self hideTopAnimation];
 }
 
 #pragma mark 进行显示
@@ -249,8 +237,6 @@
     SHToast *toast = [[SHToast alloc]initTopWithText:text];
     [toast setDuration:duration];
     [toast showTop];
-    
-    
 }
 
 @end
