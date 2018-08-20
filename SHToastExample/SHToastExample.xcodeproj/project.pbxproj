@@ -139,8 +139,8 @@
 		5C6393862124017A00BCE0A4 /* SHToast */ = {
 			isa = PBXGroup;
 			children = (
-				5C6393872124017A00BCE0A4 /* SHToast.m */,
 				5C6393882124017A00BCE0A4 /* SHToast.h */,
+				5C6393872124017A00BCE0A4 /* SHToast.m */,
 			);
 			path = SHToast;
 			sourceTree = "<group>";

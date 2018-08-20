@@ -22,10 +22,10 @@
 
 - (IBAction)toast:(id)sender {
 //    [SHToast showWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" offset:100 duration:2];
-    [SHToast showWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" duration:2];
+    [SHToast showWithText:@"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" duration:2];
 }
 - (IBAction)push:(id)sender {
-    [SHToast showTopWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵asdasdasdasd" duration:2];
+    [SHToast showTopWithText:@"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" duration:2];
 }
 
 - (void)didReceiveMemoryWarning {
