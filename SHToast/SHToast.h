@@ -9,32 +9,39 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+//弹框文字内部间隔
+#define kSHToastTextMargin 10
+
 //默认显示时间
 #define kSHToastTime 1.0f
 //弹框整体左右间隔
 #define kSHToastMargin 15
-//弹框文字内部间隔
-#define kSHToastTextMargin 10
-
 //背景颜色
-#define kSHToastRGB [[UIColor colorWithWhite:0.4 alpha:1] colorWithAlphaComponent:0.75];
+#define kSHToastRGB [[UIColor blackColor] colorWithAlphaComponent:0.5];
+
 //字体颜色
 #define kSHToastTextRGB [UIColor whiteColor]
 //字体大小
-#define kSHToastTextFont [UIFont boldSystemFontOfSize:14]
+#define kSHToastTextFont [UIFont systemFontOfSize:14]
 
-//上方推拉背景颜色
-#define kSHToastTopRGB [UIColor orangeColor];
-//上方推拉字体颜色
-#define kSHToastTopTextRGB [UIColor whiteColor]
-//上方推拉字体大小
-#define kSHToastTopTextFont [UIFont boldSystemFontOfSize:14]
+//推送时间
+#define kSHPushTime 3.0f
+//推送背景颜色
+#define kSHPushRGB [[UIColor blackColor] colorWithAlphaComponent:0.86];
+
+//推送标题颜色
+#define kSHPushTitleRGB [UIColor lightGrayColor]
+//标题字体大小
+#define kSHPushTitleFont [UIFont systemFontOfSize:14]
+
+//推送内容颜色
+#define kSHPushContentRGB [UIColor whiteColor]
+//内容字体大小
+#define kSHPushContentFont [UIFont systemFontOfSize:14]
 
 @interface SHToast : NSObject
 
-//text 可以是 NSString、NSAttributedString
-
-#pragma mark - 吐丝
+#pragma mark - 吐丝 (text 可以是 NSString、NSAttributedString)
 //中间位置显示
 + (void)showWithText:(id)text;
 + (void)showWithText:(id)text duration:(CGFloat)duration;
@@ -43,8 +50,8 @@
 + (void)showWithText:(id)text offset:(CGFloat)offset;
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration;
 
-#pragma mark - 上方推拉
-+ (void)showTopWithText:(id)text;
-+ (void)showTopWithText:(id)text duration:(CGFloat)duration;
+#pragma mark - 推送 (title、content 可以是 NSString、NSAttributedString  content必须存在)
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param block:(void(^) (NSString *param))block;
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param duration:(CGFloat)duration block:(void(^) (NSString *param))block;
 
 @end

@@ -25,7 +25,10 @@
     [SHToast showWithText:@"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" duration:2];
 }
 - (IBAction)push:(id)sender {
-    [SHToast showTopWithText:@"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" duration:2];
+    
+    [SHToast showPushWithTitle:@"1" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] param:@"123" block:^(NSString *param) {
+        NSLog(@"-----%@",param);
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -9,42 +9,63 @@
 #import "SHToast.h"
 
 @interface SHToast ()
-{
-    //内容
-    UIButton *_contentView;
-}
 
-//消失时间
-@property (nonatomic, assign) CGFloat duration;
+//内容
+@property (nonatomic, strong) UIButton *contentView;
+//回调
+@property (nonatomic, copy) void(^block)(NSString *param);
+//携带参数
+@property (nonatomic, copy) NSString *param;
 
 @end
 
 @implementation SHToast
 
+#pragma mark - 私有方法
 #pragma mark 屏幕旋转通知方法
 - (void)deviceOrientationDidChanged:(NSNotification *)not{
-    [self dismissToast];
+    [self dismiss];
 }
 
-- (void)dismissToast{
-    [_contentView removeFromSuperview];
+#pragma mark 消失
+- (void)dismiss{
+    [self.contentView removeFromSuperview];
+}
+
+#pragma mark - 懒加载
+- (UIButton *)contentView{
+    if (!_contentView) {
+        _contentView = [UIButton buttonWithType:UIButtonTypeCustom];
+        _contentView.titleLabel.numberOfLines = 0;
+        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window addSubview:_contentView];
+    }
+    return _contentView;
 }
 
 #pragma mark - 获取内容Size
-- (CGSize)getTextSizeWithText:(id)text maxSize:(CGSize)maxSize{
+- (CGSize)getTextSizeWithText:(id)text font:(UIFont *)font maxSize:(CGSize)maxSize{
     
+    CGSize size;
     //内容
     if ([text isKindOfClass:[NSString class]]) {//字符串
         
         NSString *str = (NSString *)text;
-        return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:kSHToastTextFont} context:nil].size;
+        size = [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size;
+        size = CGSizeMake(ceil(size.width), ceil(size.height));
+        
     }else if ([text isKindOfClass:[NSAttributedString class]]){//富文本
         
         NSAttributedString *att = (NSAttributedString *)text;
-        return [att boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+        size = [att boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+        size =  CGSizeMake(ceil(size.width), ceil(size.height));
+        
     }else{//其他
-        return CGSizeZero;
+        size = CGSizeZero;
     }
+    
+    return size;
 }
 
 #pragma mark - 吐丝
@@ -54,69 +75,34 @@
     if (self = [super init]) {
         
         //内容视图
-        _contentView = [UIButton buttonWithType:UIButtonTypeCustom];
-        _contentView.backgroundColor = kSHToastRGB;
-        [_contentView setTitleColor:kSHToastTextRGB forState:0];
-        _contentView.titleLabel.font = kSHToastTextFont;
-        _contentView.titleLabel.numberOfLines = 0;
-        _contentView.alpha = 0.0f;
-        [_contentView setTitleEdgeInsets:UIEdgeInsetsMake(kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [_contentView addTarget:self action:@selector(hideAnimation) forControlEvents:UIControlEventTouchDown];
+        self.contentView.backgroundColor = kSHToastRGB;
+        self.contentView.titleLabel.font = kSHToastTextFont;
+        [self.contentView setTitleColor:kSHToastTextRGB forState:0];
+        [self.contentView addTarget:self action:@selector(hideAnimation) forControlEvents:UIControlEventTouchDown];
+        self.contentView.layer.cornerRadius = 5;
         
-        _contentView.layer.cornerRadius = 5.0f;
-        _contentView.layer.borderWidth = 1.0f;
-        _contentView.layer.borderColor = [[UIColor grayColor] colorWithAlphaComponent:0.5].CGColor;
+        [self.contentView setTitleEdgeInsets:UIEdgeInsetsMake(kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
         
+        //size
         CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*kSHToastMargin - 2*kSHToastTextMargin, CGFLOAT_MAX);
-        CGSize textSize = [self getTextSizeWithText:text maxSize:maxSize];
-        _contentView.frame = CGRectMake(0, 0, textSize.width + 2*kSHToastTextMargin, textSize.height + 2*kSHToastTextMargin);
+        CGSize textSize = [self getTextSizeWithText:text font:kSHToastTextFont maxSize:maxSize];
+        self.contentView.frame = CGRectMake(0, 0, textSize.width + 2*kSHToastTextMargin, textSize.height + 2*kSHToastTextMargin);
         
         //内容
         if ([text isKindOfClass:[NSString class]]) {//字符串
             
             NSString *str = (NSString *)text;
-            [_contentView setTitle:str forState:0];
+            [self.contentView setTitle:str forState:0];
         }else if ([text isKindOfClass:[NSAttributedString class]]){//富文本
             
             NSAttributedString *att = (NSAttributedString *)text;
-            [_contentView setAttributedTitle:att forState:0];
+            [self.contentView setAttributedTitle:att forState:0];
         }
         
         //添加旋转通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     }
     return self;
-}
-
-#pragma mark 显示动画
-- (void)showAnimation{
-    
-    self->_contentView.alpha = 0;
-    [UIView animateWithDuration:0.3 animations:^{
-        self->_contentView.alpha = 1;
-    }];
-}
-
-#pragma mark 隐藏动画
-- (void)hideAnimation{
-    
-    self->_contentView.alpha = 1;
-    [UIView animateWithDuration:0.3 animations:^{
-        self->_contentView.alpha = 0;
-    }completion:^(BOOL finished) {
-        [self dismissToast];
-    }];
-}
-
-#pragma mark 自定义位置显示
-- (void)showWithOffset:(CGFloat)offset{
-    
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    _contentView.center = CGPointMake(window.center.x, offset);
-    [window  addSubview:_contentView];
-    [self showAnimation];
-    [self performSelector:@selector(hideAnimation) withObject:nil afterDelay:self.duration];
 }
 
 #pragma mark 显示方法
@@ -128,14 +114,8 @@
 
 + (void)showWithText:(id)text duration:(CGFloat)duration{
     
-    if (!text) {
-        return;
-    }
-    SHToast *toast = [[self alloc] initWithText:text];
-    toast.duration = duration;
-    
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    [toast showWithOffset:window.center.y];
+    [SHToast showWithText:text offset:window.center.y duration:duration];
 }
 
 #pragma mark 自定义位置显示
@@ -148,95 +128,198 @@
         return;
     }
     SHToast *toast = [[SHToast alloc] initWithText:text];
-    toast.duration = duration;
-    [toast showWithOffset:offset];
+    [toast showToastWithDuration:duration offset:offset];
 }
 
-#pragma mark - 上方推拉
+#pragma mark 显示
+- (void)showToastWithDuration:(CGFloat)duration offset:(CGFloat)offset{
+    
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    self.contentView.center = CGPointMake(window.center.x,offset);
+    [self showAnimation];
+    [self performSelector:@selector(hideAnimation) withObject:nil afterDelay:duration];
+}
+
+#pragma mark 显示动画
+- (void)showAnimation{
+    
+    self.contentView.alpha = 0;
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        self.contentView.alpha = 1;
+    }];
+}
+
+#pragma mark 隐藏动画
+- (void)hideAnimation{
+    
+    self.contentView.alpha = 1;
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        self.contentView.alpha = 0;
+    }completion:^(BOOL finished) {
+        [self dismiss];
+    }];
+}
+
+#pragma mark - 推送
 #pragma mark 实例化
-- (id)initTopWithText:(id)text{
+- (id)initPushWithTitle:(id)title content:(id)content image:(UIImage *)image{
     
     if (self = [super init]) {
-
-        //内容视图
-        _contentView = [UIButton buttonWithType:UIButtonTypeCustom];
-        _contentView.backgroundColor = kSHToastTopRGB;
-        [_contentView setTitleColor:kSHToastTopTextRGB forState:0];
-        _contentView.titleLabel.font = kSHToastTopTextFont;
-        _contentView.titleLabel.numberOfLines = 0;
-         [_contentView setTitleEdgeInsets:UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [_contentView addTarget:self action:@selector(hideTopAnimation) forControlEvents:UIControlEventTouchDown];
         
-        CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*kSHToastTextMargin, CGFLOAT_MAX);
-        CGSize textSize = [self getTextSizeWithText:text maxSize:maxSize];
-        CGFloat content_h = textSize.height + [[UIApplication sharedApplication] statusBarFrame].size.height + 2*kSHToastTextMargin;
-        _contentView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, content_h);
+        //内容视图
+        self.contentView.backgroundColor = kSHPushRGB;
+        [self.contentView addTarget:self action:@selector(hidePushAnimation) forControlEvents:UIControlEventTouchUpInside];
+        self.contentView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        
+        CGFloat view_top = ([[UIApplication sharedApplication] statusBarFrame].size.height == 44)?44:0;
+        [self.contentView setTitleEdgeInsets:UIEdgeInsetsMake(view_top, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
+        
+        CGFloat view_x = kSHToastMargin;
+        CGFloat view_y = view_top + kSHToastTextMargin;
+        CGFloat min_h = view_top + 2*kSHToastTextMargin + 50;
+        
+        //图片
+        if (image) {
+            
+            UIImageView *imageView = [[UIImageView alloc]init];
+            imageView.frame = CGRectMake(kSHToastMargin, view_y, 50, 50);
+            imageView.image = image;
+            imageView.backgroundColor = [UIColor lightGrayColor];
+            [self.contentView addSubview:imageView];
+            
+            view_x += CGRectGetWidth(imageView.frame) + kSHToastTextMargin;
+        }
+        
+        CGFloat max_w = [UIScreen mainScreen].bounds.size.width - view_x - kSHToastMargin;
+
+        //标题
+        if ([title length]) {
+            
+            UILabel *titleLab = [[UILabel alloc]init];
+            titleLab.numberOfLines = 0;
+            titleLab.font = kSHPushTitleFont;
+            titleLab.textColor = kSHPushTitleRGB;
+
+            CGSize textSize = [self getTextSizeWithText:title font:kSHPushTitleFont maxSize:CGSizeMake(max_w, CGFLOAT_MAX)];
+            titleLab.frame = CGRectMake(view_x, view_y, max_w, textSize.height);
+            
+            if ([title isKindOfClass:[NSString class]]) {
+                
+                titleLab.text = title;
+            }else if ([title isKindOfClass:[NSAttributedString class]]){
+                
+                titleLab.attributedText = title;
+            }
+            
+            [self.contentView addSubview:titleLab];
+            
+            view_y += CGRectGetHeight(titleLab.frame);
+        }
         
         //内容
-        if ([text isKindOfClass:[NSString class]]) {//字符串
+        if ([content length]) {
             
-            NSString *str = (NSString *)text;
-            [_contentView setTitle:str forState:0];
-        }else if ([text isKindOfClass:[NSAttributedString class]]){//富文本
+            if ([title length]) {
+                view_y += kSHToastTextMargin;
+            }
             
-            NSAttributedString *att = (NSAttributedString *)text;
-            [_contentView setAttributedTitle:att forState:0];
+            UILabel *contentLab = [[UILabel alloc]init];
+            contentLab.numberOfLines = 0;
+            contentLab.font = kSHPushContentFont;
+            contentLab.textColor = kSHPushContentRGB;
+ 
+            CGSize textSize = [self getTextSizeWithText:content font:kSHPushContentFont maxSize:CGSizeMake(max_w, CGFLOAT_MAX)];
+            contentLab.frame = CGRectMake(view_x, view_y, max_w, textSize.height);
+            
+            if ([content isKindOfClass:[NSString class]]) {
+                
+                contentLab.text = content;
+            }else if ([content isKindOfClass:[NSAttributedString class]]){
+                
+                contentLab.attributedText = content;
+            }
+            
+            [self.contentView addSubview:contentLab];
+            
+            view_y += CGRectGetHeight(contentLab.frame);
         }
-
+        
+        view_y += kSHToastTextMargin;
+        
+        if (image && view_y < min_h) {
+            view_y = min_h;
+        }
+        
+        self.contentView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, view_y);
+        
         //添加旋转通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     }
     return self;
 }
 
-#pragma mark 显示动画
-- (void)showTopAnimation{
+#pragma mark 显示方法
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param block:(void(^) (NSString *param))block{
     
-    __block CGRect frame = _contentView.frame;
-    frame.origin.y = -_contentView.frame.size.height;
-    _contentView.frame = frame;
+    [SHToast showPushWithTitle:title content:content image:image param:param duration:kSHPushTime block:block];
+}
+
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param duration:(CGFloat)duration block:(void(^) (NSString *param))block{
+    
+    if (![content length]) {
+        return;
+    }
+    
+    SHToast *toast = [[SHToast alloc]initPushWithTitle:title content:content image:image];
+    toast.block = block;
+    toast.param = param;
+    [toast showPushWithDuration:duration];
+}
+
+#pragma mark 显示
+- (void)showPushWithDuration:(CGFloat)duration{
+    
+    CGRect frame = self.contentView.frame;
+    frame.origin.y = -self.contentView.frame.size.height;
+    self.contentView.frame = frame;
+    
+    [self showPushAnimation];
+    [self performSelector:@selector(hidePushAnimation) withObject:nil afterDelay:duration];
+}
+
+#pragma mark 显示动画
+- (void)showPushAnimation{
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
+    __block CGRect frame = self.contentView.frame;
     
     [UIView animateWithDuration:0.3 animations:^{
         frame.origin.y = 0;
-        self->_contentView.frame = frame;
+        self.contentView.frame = frame;
     }];
 }
 
 #pragma mark 隐藏动画
-- (void)hideTopAnimation{
+- (void)hidePushAnimation{
     
-    __block CGRect frame = _contentView.frame;
+    //回调
+    if (self.block) {
+        self.block(self.param);
+    }
+    
+    __block CGRect frame = self.contentView.frame;
     
     [UIView animateWithDuration:0.3 animations:^{
         
         frame.origin.y = -frame.size.height;
-        self->_contentView.frame = frame;
+        self.contentView.frame = frame;
     }completion:^(BOOL finished) {
-        [self dismissToast];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [self dismiss];
     }];
-}
-
-#pragma mark 进行显示
-- (void)showTop{
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    [window addSubview:_contentView];
-    [self showTopAnimation];
-    [self performSelector:@selector(hideTopAnimation) withObject:nil afterDelay:self.duration];
-}
-
-#pragma mark 显示方法
-+ (void)showTopWithText:(id)text{
-    [SHToast showTopWithText:text duration:kSHToastTime];
-}
-
-+ (void)showTopWithText:(id)text duration:(CGFloat)duration{
-    if (!text) {
-        return;
-    }
-    SHToast *toast = [[SHToast alloc]initTopWithText:text];
-    [toast setDuration:duration];
-    [toast showTop];
 }
 
 @end
