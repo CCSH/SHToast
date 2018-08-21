@@ -13,9 +13,7 @@
 //内容
 @property (nonatomic, strong) UIButton *contentView;
 //回调
-@property (nonatomic, copy) void(^block)(NSString *param);
-//携带参数
-@property (nonatomic, copy) NSString *param;
+@property (nonatomic, copy) void(^block)(void);
 
 @end
 
@@ -170,7 +168,7 @@
         
         //内容视图
         self.contentView.backgroundColor = kSHPushRGB;
-        [self.contentView addTarget:self action:@selector(hidePushAnimation) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addTarget:self action:@selector(pushAction) forControlEvents:UIControlEventTouchUpInside];
         self.contentView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         
         CGFloat view_top = ([[UIApplication sharedApplication] statusBarFrame].size.height == 44)?44:0;
@@ -261,12 +259,12 @@
 }
 
 #pragma mark 显示方法
-+ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param block:(void(^) (NSString *param))block{
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image block:(void (^)(void))block{
     
-    [SHToast showPushWithTitle:title content:content image:image param:param duration:kSHPushTime block:block];
+    [SHToast showPushWithTitle:title content:content image:image duration:kSHPushTime block:block];
 }
 
-+ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param duration:(CGFloat)duration block:(void(^) (NSString *param))block{
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image duration:(CGFloat)duration block:(void (^)(void))block{
     
     if (![content length]) {
         return;
@@ -274,7 +272,6 @@
     
     SHToast *toast = [[SHToast alloc]initPushWithTitle:title content:content image:image];
     toast.block = block;
-    toast.param = param;
     [toast showPushWithDuration:duration];
 }
 
@@ -287,6 +284,17 @@
     
     [self showPushAnimation];
     [self performSelector:@selector(hidePushAnimation) withObject:nil afterDelay:duration];
+}
+
+#pragma mark 点击
+- (void)pushAction{
+    
+    //回调
+    if (self.block) {
+        self.block();
+    }
+    
+    [self hidePushAnimation];
 }
 
 #pragma mark 显示动画
@@ -304,11 +312,6 @@
 
 #pragma mark 隐藏动画
 - (void)hidePushAnimation{
-    
-    //回调
-    if (self.block) {
-        self.block(self.param);
-    }
     
     __block CGRect frame = self.contentView.frame;
     

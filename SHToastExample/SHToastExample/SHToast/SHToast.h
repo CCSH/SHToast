@@ -51,7 +51,7 @@
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration;
 
 #pragma mark - 推送 (title、content 可以是 NSString、NSAttributedString  content必须存在)
-+ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param block:(void(^) (NSString *param))block;
-+ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image param:(NSString *)param duration:(CGFloat)duration block:(void(^) (NSString *param))block;
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image block:(void(^)(void))block;
++ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;
 
 @end

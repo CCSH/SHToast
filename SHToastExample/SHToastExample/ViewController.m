@@ -26,8 +26,14 @@
 }
 - (IBAction)push:(id)sender {
     
-    [SHToast showPushWithTitle:@"1" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] param:@"123" block:^(NSString *param) {
-        NSLog(@"-----%@",param);
+    [SHToast showPushWithTitle:@"1" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] block:^{
+        
+    }];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [SHToast showPushWithTitle:@"1" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] block:^{
+        
     }];
 }
 
