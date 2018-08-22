@@ -14,6 +14,8 @@
 @property (nonatomic, strong) UIButton *contentView;
 //回调
 @property (nonatomic, copy) void(^block)(void);
+//记录状态栏状态
+@property (nonatomic, assign) BOOL ishidden;
 
 @end
 
@@ -171,8 +173,10 @@
         [self.contentView addTarget:self action:@selector(pushAction) forControlEvents:UIControlEventTouchUpInside];
         self.contentView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
         CGFloat view_top = ([[UIApplication sharedApplication] statusBarFrame].size.height == 44)?44:0;
         [self.contentView setTitleEdgeInsets:UIEdgeInsetsMake(view_top, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
         
         CGFloat view_x = kSHToastMargin;
         CGFloat view_y = view_top + kSHToastTextMargin;
@@ -270,8 +274,10 @@
         return;
     }
     
+    BOOL ishidden = [UIApplication sharedApplication].statusBarHidden;
     SHToast *toast = [[SHToast alloc]initPushWithTitle:title content:content image:image];
     toast.block = block;
+    toast.ishidden = ishidden;
     [toast showPushWithDuration:duration];
 }
 
@@ -300,8 +306,6 @@
 #pragma mark 显示动画
 - (void)showPushAnimation{
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    
     __block CGRect frame = self.contentView.frame;
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -313,6 +317,8 @@
 #pragma mark 隐藏动画
 - (void)hidePushAnimation{
     
+    [[UIApplication sharedApplication] setStatusBarHidden:self.ishidden];
+    
     __block CGRect frame = self.contentView.frame;
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -320,7 +326,7 @@
         frame.origin.y = -frame.size.height;
         self.contentView.frame = frame;
     }completion:^(BOOL finished) {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        
         [self dismiss];
     }];
 }
