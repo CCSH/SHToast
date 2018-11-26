@@ -14,8 +14,6 @@
 @property (nonatomic, strong) UIButton *contentView;
 //回调
 @property (nonatomic, copy) void(^block)(void);
-//记录状态栏状态
-@property (nonatomic, assign) BOOL ishidden;
 
 @end
 
@@ -29,6 +27,7 @@
 
 #pragma mark 消失
 - (void)dismiss{
+
     [self.contentView removeFromSuperview];
 }
 
@@ -38,7 +37,7 @@
         _contentView = [UIButton buttonWithType:UIButtonTypeCustom];
         _contentView.titleLabel.numberOfLines = 0;
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        UIWindow *window = [UIApplication sharedApplication].delegate.window;
         [window addSubview:_contentView];
     }
     return _contentView;
@@ -114,7 +113,7 @@
 
 + (void)showWithText:(id)text duration:(CGFloat)duration{
     
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
     [SHToast showWithText:text offset:window.center.y duration:duration];
 }
 
@@ -134,7 +133,7 @@
 #pragma mark 显示
 - (void)showToastWithDuration:(CGFloat)duration offset:(CGFloat)offset{
     
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
     self.contentView.center = CGPointMake(window.center.x,offset);
     [self showAnimation];
     [self performSelector:@selector(hideAnimation) withObject:nil afterDelay:duration];
@@ -173,10 +172,8 @@
         [self.contentView addTarget:self action:@selector(pushAction) forControlEvents:UIControlEventTouchUpInside];
         self.contentView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
         CGFloat view_top = ([[UIApplication sharedApplication] statusBarFrame].size.height == 44)?44:0;
         [self.contentView setTitleEdgeInsets:UIEdgeInsetsMake(view_top, kSHToastTextMargin, kSHToastTextMargin, kSHToastTextMargin)];
-        [[UIApplication sharedApplication] setStatusBarHidden:YES];
         
         CGFloat view_x = kSHToastMargin;
         CGFloat view_y = view_top + kSHToastTextMargin;
@@ -274,10 +271,8 @@
         return;
     }
     
-    BOOL ishidden = [UIApplication sharedApplication].statusBarHidden;
     SHToast *toast = [[SHToast alloc]initPushWithTitle:title content:content image:image];
     toast.block = block;
-    toast.ishidden = ishidden;
     [toast showPushWithDuration:duration];
 }
 
@@ -306,6 +301,9 @@
 #pragma mark 显示动画
 - (void)showPushAnimation{
     
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    window.windowLevel = UIWindowLevelAlert;
+    
     __block CGRect frame = self.contentView.frame;
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -317,7 +315,8 @@
 #pragma mark 隐藏动画
 - (void)hidePushAnimation{
     
-    [[UIApplication sharedApplication] setStatusBarHidden:self.ishidden];
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    window.windowLevel = UIWindowLevelNormal;
     
     __block CGRect frame = self.contentView.frame;
     
@@ -326,7 +325,7 @@
         frame.origin.y = -frame.size.height;
         self.contentView.frame = frame;
     }completion:^(BOOL finished) {
-        
+ 
         [self dismiss];
     }];
 }
