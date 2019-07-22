@@ -9,20 +9,30 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-//弹框文字内部间隔
-#define kSHToastTextMargin 10
+#pragma mark - Toast配置
+//弹框文字内部上下间隔
+#define kSHToastTextUDMargin 12
+//弹框文字内部左右间隔
+#define kSHToastTextLRMargin 20
+//弹框整体间隔
+#define kSHToastMargin 45
 
 //默认显示时间
 #define kSHToastTime 1.0f
-//弹框整体左右间隔
-#define kSHToastMargin 15
+
 //背景颜色
-#define kSHToastRGB [[UIColor blackColor] colorWithAlphaComponent:0.5];
+#define kSHToastRGB [[UIColor blackColor] colorWithAlphaComponent:0.6];
 
 //字体颜色
 #define kSHToastTextRGB [UIColor whiteColor]
 //字体大小
 #define kSHToastTextFont [UIFont systemFontOfSize:14]
+
+#pragma mark - push配置
+//Push文字内部上下间隔
+#define kSHPushTextUDMargin 12
+//Push文字内部左右间隔
+#define kSHPushTextLRMargin 10
 
 //推送时间
 #define kSHPushTime 3.0f
@@ -41,7 +51,7 @@
 
 @interface SHToast : NSObject
 
-#pragma mark - 吐丝 (text 可以是 NSString、NSAttributedString)
+#pragma mark - Toast (text 可以是 NSString、NSAttributedString)
 //中间位置显示
 + (void)showWithText:(id)text;
 + (void)showWithText:(id)text duration:(CGFloat)duration;
@@ -50,7 +60,7 @@
 + (void)showWithText:(id)text offset:(CGFloat)offset;
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration;
 
-#pragma mark - 推送 (title、content 可以是 NSString、NSAttributedString  content必须存在)
+#pragma mark - Push (title、content 可以是 NSString、NSAttributedString  content必须存在)
 + (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image block:(void(^)(void))block;
 + (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;
 

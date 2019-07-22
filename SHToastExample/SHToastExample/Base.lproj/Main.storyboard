@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="hdQ-yn-tkv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="hdQ-yn-tkv">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -26,7 +26,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="rmu-sA-DWR"/>
                                 </constraints>
-                                <state key="normal" title="吐丝"/>
+                                <state key="normal" title="Toast"/>
                                 <connections>
                                     <action selector="toast:" destination="hdQ-yn-tkv" eventType="touchUpInside" id="cFg-jC-Iz4"/>
                                 </connections>
@@ -36,7 +36,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="zum-gF-Qhw"/>
                                 </constraints>
-                                <state key="normal" title="推送"/>
+                                <state key="normal" title="Push"/>
                                 <connections>
                                     <action selector="push:" destination="hdQ-yn-tkv" eventType="touchUpInside" id="nxW-Oa-pHs"/>
                                 </connections>

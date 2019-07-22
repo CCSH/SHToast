@@ -26,7 +26,7 @@
 }
 - (IBAction)push:(id)sender {
     
-    [SHToast showPushWithTitle:@"1" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] block:^{
+    [SHToast showPushWithTitle:@"标题" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] block:^{
         
     }];
 }
