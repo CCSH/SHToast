@@ -5,4 +5,4 @@ pod 'SHToast'
 ```
 
 
-![image](https://github.com/CCSH/SHToast/blob/master/QQ20170816-150506-HD.gif)
+![image](https://github.com/CCSH/SHToast/blob/master/gif.gif)
