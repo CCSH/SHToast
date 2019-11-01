@@ -11,9 +11,9 @@
 
 #pragma mark - Toast配置
 //弹框文字内部上下间隔
-#define kSHToastTextUDMargin 12
+#define kSHToastVertical 10
 //弹框文字内部左右间隔
-#define kSHToastTextLRMargin 20
+#define kSHToastHorizontal 20
 //弹框整体间隔
 #define kSHToastMargin 45
 
@@ -30,12 +30,13 @@
 
 #pragma mark - push配置
 //Push文字内部上下间隔
-#define kSHPushTextUDMargin 12
+#define kSHPushVertical 12
 //Push文字内部左右间隔
-#define kSHPushTextLRMargin 10
+#define kSHPushHorizontal 10
 
 //推送时间
 #define kSHPushTime 3.0f
+
 //推送背景颜色
 #define kSHPushRGB [[UIColor blackColor] colorWithAlphaComponent:0.86];
 
@@ -60,8 +61,8 @@
 + (void)showWithText:(id)text offset:(CGFloat)offset;
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration;
 
-#pragma mark - Push (title、content 可以是 NSString、NSAttributedString  content必须存在)
-+ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image block:(void(^)(void))block;
-+ (void)showPushWithTitle:(id)title content:(id)content image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;
+#pragma mark - Push (title、content 可以是 NSString、NSAttributedString  content必须存在，其他参数可选)
++ (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image block:(void(^)(void))block;
++ (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;
 
 @end

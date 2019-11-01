@@ -21,20 +21,12 @@
 }
 
 - (IBAction)toast:(id)sender {
-//    [SHToast showWithText:@"额呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵" offset:100 duration:2];
-    [SHToast showWithText:@"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" duration:2];
+
+    [SHToast showWithText:@"啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"];
 }
 - (IBAction)push:(id)sender {
     
-    [SHToast showPushWithTitle:@"标题" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] block:^{
-        
-    }];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [SHToast showPushWithTitle:@"1" content:@"我是内容啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊" image:[UIImage new] block:^{
-        
-    }];
+    [SHToast showPushWithContent:@"我是内容" title:@"标题" image:[UIImage new] block:nil];
 }
 
 - (void)didReceiveMemoryWarning {
