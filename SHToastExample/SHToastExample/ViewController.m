@@ -26,7 +26,8 @@
 }
 - (IBAction)push:(id)sender {
     
-    [SHToast showPushWithContent:@"我是内容" title:@"标题" image:[UIImage new] block:nil];
+    [SHToast showPushWithContent:@"内容"
+                    title:@"标题" image:[UIImage new] block:nil];
 }
 
 - (void)didReceiveMemoryWarning {

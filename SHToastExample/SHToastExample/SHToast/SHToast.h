@@ -10,10 +10,9 @@
 #import <UIKit/UIKit.h>
 
 #pragma mark - Toast配置
-//弹框文字内部上下间隔
-#define kSHToastVertical 10
-//弹框文字内部左右间隔
-#define kSHToastHorizontal 20
+//弹框内部间隔
+#define kSHToastEdgeInsets UIEdgeInsetsMake(10, 20, 10, 20)
+
 //弹框整体间隔
 #define kSHToastMargin 45
 
@@ -29,10 +28,8 @@
 #define kSHToastTextFont [UIFont systemFontOfSize:14]
 
 #pragma mark - push配置
-//Push文字内部上下间隔
-#define kSHPushVertical 12
-//Push文字内部左右间隔
-#define kSHPushHorizontal 10
+//Push内部间隔
+#define kSHPushEdgeInsets UIEdgeInsetsMake(12, 10, 12, 10)
 
 //推送时间
 #define kSHPushTime 3.0f
@@ -61,7 +58,7 @@
 + (void)showWithText:(id)text offset:(CGFloat)offset;
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration;
 
-#pragma mark - Push (title、content 可以是 NSString、NSAttributedString  content必须存在，其他参数可选)
+#pragma mark - Push (title、content 可以是 NSString、NSAttributedString)
 + (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image block:(void(^)(void))block;
 + (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;
 

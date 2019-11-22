@@ -75,15 +75,15 @@
         
         //内容视图
         self.contentView.backgroundColor = kSHToastRGB;
-        [self.contentView setTitleEdgeInsets:UIEdgeInsetsMake(kSHToastVertical, kSHToastHorizontal, kSHToastVertical, kSHToastHorizontal)];
+        [self.contentView setTitleEdgeInsets:kSHToastEdgeInsets];
         [self.contentView addTarget:self action:@selector(hideAnimation) forControlEvents:UIControlEventTouchDown];
         
         //内容处理
         NSMutableAttributedString *att = nil;
         if ([text isKindOfClass:[NSString class]]) {//字符串
-
+            
             att = [[NSMutableAttributedString alloc]initWithString:(NSString *)text];
-
+            
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc]init];
             style.alignment = NSTextAlignmentCenter;
             [att addAttributes:@{NSFontAttributeName: kSHToastTextFont,
@@ -93,9 +93,9 @@
         }
         
         //size
-        CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*kSHToastMargin - 2*kSHToastVertical, CGFLOAT_MAX);
+        CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*kSHToastMargin - self.contentView.titleEdgeInsets.left - self.contentView.titleEdgeInsets.right, CGFLOAT_MAX);
         CGSize textSize = [self getTextSizeWithText:text font:kSHToastTextFont maxSize:maxSize];
-        textSize = CGSizeMake(textSize.width + 2*kSHToastHorizontal, textSize.height + 2*kSHToastVertical);
+        textSize = CGSizeMake(textSize.width + self.contentView.titleEdgeInsets.left + self.contentView.titleEdgeInsets.right, textSize.height + self.contentView.titleEdgeInsets.top + self.contentView.titleEdgeInsets.bottom);
         self.contentView.frame = CGRectMake(0, 0, MAX(textSize.width, textSize.height), textSize.height);
         
         //圆角 需要控制最大圆角
@@ -175,28 +175,29 @@
         
         //内容视图
         self.contentView.backgroundColor = kSHPushRGB;
+        [self.contentView setTitleEdgeInsets:kSHPushEdgeInsets];
         [self.contentView addTarget:self action:@selector(pushAction) forControlEvents:UIControlEventTouchUpInside];
-        CGFloat view_top = [[UIApplication sharedApplication] statusBarFrame].size.height;
         
-        CGFloat view_x = kSHPushVertical;
-        CGFloat view_y = view_top + kSHPushHorizontal;
-        CGFloat min_h = view_top + 2*kSHPushHorizontal + 50;
+        
+        CGFloat view_x = self.contentView.titleEdgeInsets.left;
+        CGFloat view_y = [[UIApplication sharedApplication] statusBarFrame].size.height + self.contentView.titleEdgeInsets.top;
+        CGFloat min_h = view_y + self.contentView.titleEdgeInsets.bottom;
         
         //图片
         if (image) {
             
             UIImageView *imageView = [[UIImageView alloc]init];
-            imageView.frame = CGRectMake(kSHPushVertical, view_y, 50, 50);
+            imageView.frame = CGRectMake(view_x, view_y, 50, 50);
             imageView.image = image;
             imageView.backgroundColor = [UIColor lightGrayColor];
             [self.contentView addSubview:imageView];
             
-            view_x += CGRectGetMaxX(imageView.frame);
+            //右边距离
+            view_x = CGRectGetMaxX(imageView.frame) + 10;
+            min_h = CGRectGetMaxY(imageView.frame) + self.contentView.titleEdgeInsets.bottom;
         }
         
-        CGFloat max_w = [UIScreen mainScreen].bounds.size.width - view_x - 2*kSHPushVertical;
-        
-        view_x += kSHPushVertical;
+        CGFloat max_w = [UIScreen mainScreen].bounds.size.width - view_x - self.contentView.titleEdgeInsets.left - self.contentView.titleEdgeInsets.right;
         
         //标题
         if ([title length]) {
@@ -226,7 +227,8 @@
         if ([content length]) {
             
             if ([title length]) {
-                view_y += kSHPushHorizontal;
+                //上下距离
+                view_y += 10;
             }
             
             UILabel *contentLab = [[UILabel alloc]init];
@@ -250,11 +252,9 @@
             view_y += CGRectGetHeight(contentLab.frame);
         }
         
-        view_y += kSHPushHorizontal;
+        view_y += self.contentView.titleEdgeInsets.bottom;
         
-        if (image && view_y < min_h) {
-            view_y = min_h;
-        }
+        view_y = MAX(view_y, min_h);
         
         self.contentView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, view_y);
         
@@ -271,11 +271,7 @@
 }
 
 + (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;{
-    
-    if (![content length]) {
-        return;
-    }
-    
+
     SHToast *toast = [[SHToast alloc]initPushWithTitle:title content:content image:image];
     toast.block = block;
     [toast showPushWithDuration:duration];
