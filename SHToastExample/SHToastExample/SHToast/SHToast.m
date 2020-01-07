@@ -73,9 +73,10 @@
     
     if (self = [super init]) {
         
+        SHToastStyle *toastStyle = [SHToastStyle shareSHToastStyle];
         //内容视图
-        self.contentView.backgroundColor = kSHToastRGB;
-        [self.contentView setTitleEdgeInsets:kSHToastEdgeInsets];
+        self.contentView.backgroundColor = toastStyle.color;
+        [self.contentView setTitleEdgeInsets:toastStyle.edgeInsets];
         [self.contentView addTarget:self action:@selector(hideAnimation) forControlEvents:UIControlEventTouchDown];
         
         //内容处理
@@ -86,15 +87,15 @@
             
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc]init];
             style.alignment = NSTextAlignmentCenter;
-            [att addAttributes:@{NSFontAttributeName: kSHToastTextFont,
-                                 NSForegroundColorAttributeName: kSHToastTextRGB,
+            [att addAttributes:@{NSFontAttributeName: toastStyle.font,
+                                 NSForegroundColorAttributeName: toastStyle.textColor,
                                  NSParagraphStyleAttributeName: style} range:NSMakeRange(0, att.length)];
             text = att;
         }
         
         //size
-        CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*kSHToastMargin - self.contentView.titleEdgeInsets.left - self.contentView.titleEdgeInsets.right, CGFLOAT_MAX);
-        CGSize textSize = [self getTextSizeWithText:text font:kSHToastTextFont maxSize:maxSize];
+        CGSize maxSize = CGSizeMake([UIScreen mainScreen].bounds.size.width - 2*toastStyle.margin - self.contentView.titleEdgeInsets.left - self.contentView.titleEdgeInsets.right, CGFLOAT_MAX);
+        CGSize textSize = [self getTextSizeWithText:text font:toastStyle.font maxSize:maxSize];
         textSize = CGSizeMake(textSize.width + self.contentView.titleEdgeInsets.left + self.contentView.titleEdgeInsets.right, textSize.height + self.contentView.titleEdgeInsets.top + self.contentView.titleEdgeInsets.bottom);
         self.contentView.frame = CGRectMake(0, 0, MAX(textSize.width, textSize.height), textSize.height);
         
@@ -114,7 +115,7 @@
 #pragma mark 中间位置显示
 + (void)showWithText:(id)text{
     
-    [SHToast showWithText:text duration:kSHToastTime];
+    [SHToast showWithText:text duration:[SHToastStyle shareSHToastStyle].time];
 }
 
 + (void)showWithText:(id)text duration:(CGFloat)duration{
@@ -125,7 +126,7 @@
 
 #pragma mark 自定义位置显示
 + (void)showWithText:(id)text offset:(CGFloat)offset{
-    [SHToast showWithText:text offset:offset duration:kSHToastTime];
+    [SHToast showWithText:text offset:offset duration:[SHToastStyle shareSHToastStyle].time];
 }
 
 + (void)showWithText:(id)text offset:(CGFloat)offset duration:(CGFloat)duration{
@@ -173,9 +174,10 @@
     
     if (self = [super init]) {
         
+        SHPushStyle *pushStyle = [SHPushStyle shareSHPushStyle];
         //内容视图
-        self.contentView.backgroundColor = kSHPushRGB;
-        [self.contentView setTitleEdgeInsets:kSHPushEdgeInsets];
+        self.contentView.backgroundColor = pushStyle.color;
+        [self.contentView setTitleEdgeInsets:pushStyle.edgeInsets];
         [self.contentView addTarget:self action:@selector(pushAction) forControlEvents:UIControlEventTouchUpInside];
         
         
@@ -187,7 +189,7 @@
         if (image) {
             
             UIImageView *imageView = [[UIImageView alloc]init];
-            imageView.frame = CGRectMake(view_x, view_y, 50, 50);
+            imageView.frame = CGRectMake(view_x, view_y, pushStyle.imageSize.width, pushStyle.imageSize.height);
             imageView.image = image;
             imageView.backgroundColor = [UIColor lightGrayColor];
             [self.contentView addSubview:imageView];
@@ -204,10 +206,10 @@
             
             UILabel *titleLab = [[UILabel alloc]init];
             titleLab.numberOfLines = 0;
-            titleLab.font = kSHPushTitleFont;
-            titleLab.textColor = kSHPushTitleRGB;
+            titleLab.font = pushStyle.titleFont;
+            titleLab.textColor = pushStyle.titleColor;
             
-            CGSize textSize = [self getTextSizeWithText:title font:kSHPushTitleFont maxSize:CGSizeMake(max_w, CGFLOAT_MAX)];
+            CGSize textSize = [self getTextSizeWithText:title font:pushStyle.titleFont maxSize:CGSizeMake(max_w, CGFLOAT_MAX)];
             titleLab.frame = CGRectMake(view_x, view_y, max_w, textSize.height);
             
             if ([title isKindOfClass:[NSString class]]) {
@@ -233,10 +235,10 @@
             
             UILabel *contentLab = [[UILabel alloc]init];
             contentLab.numberOfLines = 0;
-            contentLab.font = kSHPushContentFont;
-            contentLab.textColor = kSHPushContentRGB;
+            contentLab.font = pushStyle.contentFont;
+            contentLab.textColor = pushStyle.contentColor;
             
-            CGSize textSize = [self getTextSizeWithText:content font:kSHPushContentFont maxSize:CGSizeMake(max_w, CGFLOAT_MAX)];
+            CGSize textSize = [self getTextSizeWithText:content font:pushStyle.contentFont maxSize:CGSizeMake(max_w, CGFLOAT_MAX)];
             contentLab.frame = CGRectMake(view_x, view_y, max_w, textSize.height);
             
             if ([content isKindOfClass:[NSString class]]) {
@@ -267,7 +269,7 @@
 #pragma mark 显示方法
 + (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image block:(void(^)(void))block{
     
-    [SHToast showPushWithContent:content title:title image:image duration:kSHPushTime block:block];
+    [SHToast showPushWithContent:content title:title image:image duration:[SHPushStyle shareSHPushStyle].time block:block];
 }
 
 + (void)showPushWithContent:(id)content title:(id)title image:(UIImage *)image duration:(CGFloat)duration block:(void(^) (void))block;{
@@ -329,6 +331,49 @@
         
         [self dismiss];
     }];
+}
+
+@end
+
+
+@implementation SHToastStyle
+
++ (instancetype)shareSHToastStyle
+{
+    static SHToastStyle *model;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        model = [[SHToastStyle alloc]init];
+        model.edgeInsets = UIEdgeInsetsMake(10, 20, 10, 20);
+        model.margin = 45;
+        model.time = 1.0;
+        model.color = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        model.textColor = [UIColor whiteColor];
+        model.font = [UIFont systemFontOfSize:14];
+    });
+    return model;
+}
+
+@end
+
+@implementation SHPushStyle
+
++ (instancetype)shareSHPushStyle
+{
+    static SHPushStyle *model;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        model = [[SHPushStyle alloc]init];
+        model.edgeInsets = UIEdgeInsetsMake(12, 10, 12, 10);
+        model.time = 3.0;
+        model.imageSize = CGSizeMake(50, 50);
+        model.color = [[UIColor blackColor] colorWithAlphaComponent:0.86];
+        model.titleColor = [UIColor lightGrayColor];
+        model.titleFont = [UIFont systemFontOfSize:14];
+        model.contentColor = [UIColor whiteColor];
+        model.contentFont = [UIFont systemFontOfSize:14];
+    });
+    return model;
 }
 
 @end
