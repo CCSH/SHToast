@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name         = "SHToast"
-    s.version      = "1.2.0"
+    s.version      = "1.2.1"
     s.summary      = "Toast弹框+推送"
     s.homepage     = "https://github.com/CCSH/SHToast"
     s.license      = "MIT"

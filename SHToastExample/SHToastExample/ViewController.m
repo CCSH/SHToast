@@ -18,16 +18,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+//    [SHToastStyle share].textColor = [UIColor orangeColor];
 }
 
 - (IBAction)toast:(id)sender {
 
-    [SHToast showWithText:@"啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"];
+    [SHToast showWithText:@"我是Toast"];
 }
 - (IBAction)push:(id)sender {
     
-    [SHToast showPushWithContent:@"内容"
-                    title:@"标题" image:[UIImage new] block:nil];
+    [SHToast showPushWithContent:@"我是push内容"
+                    title:@"推送" image:[UIImage new] block:nil];
 }
 
 - (void)didReceiveMemoryWarning {
