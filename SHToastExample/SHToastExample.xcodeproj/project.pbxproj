@@ -15,7 +15,7 @@
 		5C63934D2124006F00BCE0A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C63934C2124006F00BCE0A4 /* main.m */; };
 		5C6393572124006F00BCE0A4 /* SHToastExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6393562124006F00BCE0A4 /* SHToastExampleTests.m */; };
 		5C6393622124006F00BCE0A4 /* SHToastExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6393612124006F00BCE0A4 /* SHToastExampleUITests.m */; };
-		5CD6840722E57A07001B8945 /* SHToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CD6840522E57A07001B8945 /* SHToast.m */; };
+		83DFAD0325ECD8FD00C27029 /* SHToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DFAD0125ECD8FD00C27029 /* SHToast.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,8 +52,8 @@
 		5C63935D2124006F00BCE0A4 /* SHToastExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SHToastExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C6393612124006F00BCE0A4 /* SHToastExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHToastExampleUITests.m; sourceTree = "<group>"; };
 		5C6393632124006F00BCE0A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5CD6840522E57A07001B8945 /* SHToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHToast.m; sourceTree = "<group>"; };
-		5CD6840622E57A07001B8945 /* SHToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHToast.h; sourceTree = "<group>"; };
+		83DFAD0125ECD8FD00C27029 /* SHToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHToast.m; sourceTree = "<group>"; };
+		83DFAD0225ECD8FD00C27029 /* SHToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHToast.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +104,7 @@
 		5C63933C2124006E00BCE0A4 /* SHToastExample */ = {
 			isa = PBXGroup;
 			children = (
-				5CD6840422E57A07001B8945 /* SHToast */,
+				83DFAD0025ECD8FD00C27029 /* SHToast */,
 				5C63933D2124006E00BCE0A4 /* AppDelegate.h */,
 				5C63933E2124006E00BCE0A4 /* AppDelegate.m */,
 				5C6393402124006E00BCE0A4 /* ViewController.h */,
@@ -136,13 +136,14 @@
 			path = SHToastExampleUITests;
 			sourceTree = "<group>";
 		};
-		5CD6840422E57A07001B8945 /* SHToast */ = {
+		83DFAD0025ECD8FD00C27029 /* SHToast */ = {
 			isa = PBXGroup;
 			children = (
-				5CD6840622E57A07001B8945 /* SHToast.h */,
-				5CD6840522E57A07001B8945 /* SHToast.m */,
+				83DFAD0225ECD8FD00C27029 /* SHToast.h */,
+				83DFAD0125ECD8FD00C27029 /* SHToast.m */,
 			);
-			path = SHToast;
+			name = SHToast;
+			path = ../../SHToast;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -277,7 +278,7 @@
 			files = (
 				5C6393422124006E00BCE0A4 /* ViewController.m in Sources */,
 				5C63934D2124006F00BCE0A4 /* main.m in Sources */,
-				5CD6840722E57A07001B8945 /* SHToast.m in Sources */,
+				83DFAD0325ECD8FD00C27029 /* SHToast.m in Sources */,
 				5C63933F2124006E00BCE0A4 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

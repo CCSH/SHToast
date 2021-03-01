@@ -134,7 +134,7 @@
     }
     SHToast *toast = [[SHToast alloc] initWithText:text];
     if (duration <= 0) {
-        duration = [SHToastStyle share].time;
+        duration = [SHToastStyle share].duration;
     }
     [toast showToastWithDuration:duration offset:offset];
 }
@@ -277,7 +277,7 @@
 
     SHToast *toast = [[SHToast alloc]initPushWithTitle:title content:content image:image];
     if (duration <= 0) {
-        duration = [SHToastStyle share].time;
+        duration = [SHToastStyle share].duration;
     }
     toast.block = block;
     [toast showPushWithDuration:duration];
@@ -348,7 +348,7 @@
     dispatch_once(&onceToken, ^{
         model = [[SHToastStyle alloc]init];
         
-        model.time = 2;
+        model.duration = 2;
         model.font = [UIFont systemFontOfSize:14];
         model.textColor = [UIColor whiteColor];
         model.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];

@@ -34,7 +34,7 @@
 //弹框整体间隔(默认 10)
 @property (nonatomic, assign) CGFloat margin;
 //默认显示时间(默认 2)
-@property (nonatomic, assign) CGFloat time;
+@property (nonatomic, assign) CGFloat duration;
 //背景颜色(默认 黑色 0.7)
 @property (nonatomic, strong) UIColor *color;
 //字体颜色(默认 白色)
